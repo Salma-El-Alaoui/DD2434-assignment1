@@ -1,1 +1,3 @@
-# DD2434-assignement1
+# DD2434-assignment1
+
+Assignment for an Advanced machine learning course
