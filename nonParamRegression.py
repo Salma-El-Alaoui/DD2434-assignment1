@@ -29,10 +29,11 @@ def generateData():
     return (X,Y)
 
 def kernel(X, Y, l=1.):
-    return np.exp(-cdist(X, Y, 'sqeuclidean')/(l*l)) + 0.5*np.ones((len(X),len(X)))
+    return np.exp(-cdist(X, Y, 'sqeuclidean')/(l*l))
 
 def computePosterior(xStar, X, Y,l):
-    Xstar = np.array([xStar])
+    #Xstar = np.array([xStar])
+    Xstar = xStar
     X = X[:,None]
     Xstar = Xstar[:,None]
     k = kernel(Xstar,X,l)
@@ -42,35 +43,43 @@ def computePosterior(xStar, X, Y,l):
 
     c = kernel(Xstar, Xstar,l)
     sigma = c- np.dot(np.dot(k,C),np.transpose(k))
-    return mu, np.sqrt(sigma)
+    return mu, sigma
+
+def plotSamplePos():
+    X, Y = generateData()
+    x = np.linspace(-2*np.pi, 2*np.pi, 800)
+    mu, sigma=computePosterior(x,X,Y,2.)
+    print(mu)
+    mu = np.reshape(mu,(800,))
+    x = x[:,None]
+    Z = np.random.multivariate_normal(mu,np.nan_to_num(sigma),20)
+    pb.figure() # open new plotting window?
+    pb.plot(X,Y,'ro')
+    for i in range(20):
+        pb.plot(x[:],Z[i,:])
+    pb.show()
 
 def plotPosterior():
     #plotGp(0.2)
     X, Y = generateData()
     x = np.linspace(-2*np.pi, 2*np.pi, 800)
-    list = np.arange(1.0,3.0,0.5)
+    list = np.arange(1.5,2.5,0.5)
     for l in list:
-        mean = []
-        deviation = []
-        title = 'length-scale '+str(l)
-        for data in x:
-            mu, sigma = computePosterior(data,X,Y,l)
-            mean.append(mu[0][0])
-            deviation.append(sigma[0][0])
+
+        mu, sigma = computePosterior(x,X,Y,l)
         #plot observations
         plt.plot(X, Y,'ro')
         plt.plot(x,np.sin(x), color = 'green')
-        #plot mean
-        plt.plot(x,mean, color = 'blue')
-        #plot uncertainty
-        upper = np.asarray(mean)+ 2*np.asarray(deviation)
-        lower = np.asarray(mean)- 2*np.asarray(deviation)
+        mu = np.reshape(mu, (800,))
+        plt.plot(x,mu, color = 'blue')
+        upper = mu + 2*np.sqrt(sigma.diagonal())
+        lower = mu - 2*np.sqrt(sigma.diagonal())
         ax = plt.gca()
         ax.fill_between(x, upper, lower, facecolor='pink', interpolate=True, alpha=0.1)
         #plt.title(title)
         plt.show()
 
-plotPosterior()
+plotSamplePos()
 
 
 
