@@ -49,8 +49,6 @@ def computeLikelihood(number, xi, yi, posterior = None):
         for j, index in enumerate(indices):
             if i == index :
                     Wsamples.append((x,y))
-
-
     return Z, Wsamples
 
 def plotSamples(W):

@@ -77,13 +77,6 @@ def create_index_set(evidence):
         D.remove(L[-1])
     return L
 
-#
-#
-#print(index)
-#plt.plot(evidence[0,index],'r')
-#plt.plot(evidence[1,index],'g')
-#plt.show()
-
 
 #drawDataset(l[0])
 samples1 = priorSample(1,10**4)

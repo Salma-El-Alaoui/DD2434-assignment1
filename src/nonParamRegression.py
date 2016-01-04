@@ -1,4 +1,3 @@
-__author__ = 'HP'
 
 _author__ = 'Salma'
 
